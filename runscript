@@ -1,0 +1,49 @@
+#!/bin/bash
+
+f="$1"
+
+function display() {
+	name="$1"
+	text="$2"
+	notify-send "$1" "$2"
+}
+
+function copy() {
+	name="$1"
+	text="$2"
+	xclip -o > /tmp/oldclip
+	notify-send "$1" "Copied to clipboard"
+	echo -n "$text" | xclip -i -quiet -l 1
+	xclip -i < /tmp/oldclip
+}
+
+function getstr() {
+	prompt="$1"
+	( echo "SETPROMPT $prompt"; echo "GETPIN" ) | pinentry | grep '^D ' | sed 's/^D //'
+}
+
+function copyn() {
+	name="$1"
+	ltext=" $2"
+	getstr "Please enter which indices of $name you'd like" | tr ',' '\n' | while read n; do
+		copy "$name" "${ltext:$n:1}"
+	done
+}
+
+function displayn() {
+	name="$1"
+	ltext=" $2"
+	getstr "Please enter which indices of $name you'd like" | tr ',' '\n' | while read n; do
+		display "$name" "${ltext:$n:1}"
+	done
+}
+
+. <(gpg --use-agent -a -d "$f")
+
+case "$f" in
+	*insec)
+		;;
+	*sec)
+		#killall -HUP gpg-agent
+		;;
+esac

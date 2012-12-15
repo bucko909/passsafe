@@ -1,0 +1,12 @@
+A login safe contains a script, which is executed line-by-line using a shell with some pre-defined functions:
+
+display <name> <text>
+	Display text in a popup.
+
+copy <name> <text>
+	Copy <text> to the clipboard, allowing a single paste. Display <name> in a notify window.
+
+copyn <name> <text>
+displayn <name> <text>
+	Ask for indices into <text>, copying each character to the clipboard or displaying it in turn.
+	User can input a comma separated list of indices.
